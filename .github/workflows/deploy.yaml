@@ -44,7 +44,7 @@ jobs:
 
     - name: Sync ArgoCD Application
       run: |
-        argocd login --insecure --username admin --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web argocd-server.default.svc.cluster.local:443
+        argocd login --insecure --username admin --password ${{ secrets.ARGOCD_PASSWORD }}
         argocd app sync node-app
 
     - name: Wait for application to be healthy
