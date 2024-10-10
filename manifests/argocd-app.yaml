@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-app
+  namespace: argocd  # This is the namespace where ArgoCD is installed
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/vasuchallapu/node-helm-argocd.git
+    targetRevision: HEAD
+    path: nodeapp/  # Path to your Helm chart in the repository
+
+  destination:
+    server: https://kubernetes.default.svc  # Points to the Kubernetes API server within the cluster
+    namespace: default  # Namespace where your app should be deployed
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
