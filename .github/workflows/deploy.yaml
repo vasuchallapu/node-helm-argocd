@@ -38,9 +38,9 @@ jobs:
     #     helm repo add my-chart-repo https://charts.example.com/
     #     helm repo update
 
-    - name: Deploy Helm chart
-      run: |
-        helm upgrade --install mynodeapp-release nodeapp/ --values nodeapp/values.yaml --namespace default        
+    # - name: Deploy Helm chart
+    #   run: |
+    #     helm upgrade --install mynodeapp-release nodeapp/ --values nodeapp/values.yaml --namespace default        
 
     - name: Sync ArgoCD Application
       run: |
