@@ -1,0 +1,5 @@
+nodeapp: node-app
+
+image:
+  name: vasuchallapu/node-app
+  tag: latest

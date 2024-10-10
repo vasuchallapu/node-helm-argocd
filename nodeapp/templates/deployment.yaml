@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.nodeapp }}
+  labels:
+    app: {{ .Values.nodeapp }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.nodeapp }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.nodeapp }}
+    spec:
+      containers:
+      - name: {{ .Values.nodeapp }}
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 8080
