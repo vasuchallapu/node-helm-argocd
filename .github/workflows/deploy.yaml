@@ -15,6 +15,7 @@ jobs:
 
     - name: Set up Kubernetes
       run: |
+        mkdir -p $HOME/.kube
         echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
     - name: Install kubectl
