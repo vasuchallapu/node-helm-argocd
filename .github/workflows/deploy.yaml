@@ -1,0 +1,51 @@
+name: Deploy Helm Node.js App to Minikube
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Kubernetes
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
+
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+    - name: Install ArgoCD CLI
+      run: |
+        curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.7.6/argocd-linux-amd64
+        chmod +x /usr/local/bin/argocd
+
+    # - name: Add Helm chart repository (if applicable)
+    #   run: |
+    #     helm repo add my-chart-repo https://charts.example.com/
+    #     helm repo update
+
+    - name: Deploy Helm chart
+      run: |
+        helm upgrade --install mynodeapp-release nodeapp/ --values nodeapp/values.yaml --namespace default        
+
+    - name: Sync ArgoCD Application
+      run: |
+        argocd login --insecure --username admin --password ${{ secrets.ARGOCD_PASSWORD }} --grpc-web argocd-server.default.svc.cluster.local:443
+        argocd app sync node-app
+
+    - name: Wait for application to be healthy
+      run: |
+        argocd app wait node-app --health
